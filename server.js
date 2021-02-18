@@ -5,3 +5,23 @@ const mongoose = require("mongoose")
 
 app.use(express.json())
 app.use(morgan("dev"))
+
+mongoose.connect("mongodb://localhost:/27017/paintingDb",
+    {   useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+    },
+    () => "connected to the database")
+
+app.use("/interior", require("./routes/interiorRouter.js"))
+app.use("/exterior", require("./routes/exteriorRouter.js"))
+
+app.use((err, req, res, next) => {
+    if(err)
+    return res.send({errMsg: err.message})
+})
+
+app.listen(9000, () => {
+    console.log("successfully running on port 9000")
+})
